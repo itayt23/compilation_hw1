@@ -3,7 +3,7 @@
 #include <string>
 #include "tokens.hpp"
 
-
+#define INVALID_CHAR -1
 
 std::string token_to_string(int token){
     switch(token) {
@@ -39,6 +39,36 @@ std::string token_to_string(int token){
     }
 	return "NULL";
 }
+
+char get_escape_sequence(char c){
+	switch (c)
+	{
+		case 'n':
+			return '\n';
+		case '0':
+			return '\0';
+		case 'r':
+			return '\r';
+		case 't':
+			return '\t';
+		case '\\': //TODO: need to check
+			return '\\';
+		case '"':
+			return '"';
+		case 'x':
+			return 'x';
+		default:
+			return INVALID_CHAR;
+	}
+}
+
+char hex_to_ascii(char c1,char c2){ //TODo: check if its working
+		std::string hex = std::string(1,c1)+c2; 
+ 		return (char) (int)strtol(hex.c_str(), nullptr, 16);
+}
+
+
+
 int main()
 {
 	int token;
@@ -59,7 +89,31 @@ int main()
 			printf("%d %s %s\n", yylineno, yytext, "//");
 		}
 		else if(token == STRING){
-			printf("%d %s %s\n", yylineno, token_to_string(token),yytext);
+			int string_len = strlen(yytext);
+			std::string final_string;
+			for(int i = 0; i<string_len; i++){
+				if(yytext[i] != '\\'){
+					final_string.push_back(yytext[i]);
+				}
+				else{
+					char escape_sequence = get_escape_sequence(yytext[i+1]);
+					if(escape_sequence == INVALID_CHAR){
+						std::cout << "Error undefined escape sequence "<< escape_sequence<< std::endl;
+						exit(0);
+					}
+					if(escape_sequence != 'x'){
+						final_string.push_back(escape_sequence);
+						i++;
+					}
+					else{
+						char ascii_char = hex_to_ascii(yytext[i+2],yytext[i+3]);
+						final_string.push_back(ascii_char);
+						i+=3;
+					}
+				}
+			}
+			std::cout << yylineno << " " << token_to_string(token) << " "
+             << final_string << std::endl;
 		}
 	return 0;
 }
