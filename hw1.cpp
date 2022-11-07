@@ -44,13 +44,15 @@ int main()
 	int token;
 	while ((token = yylex())) {
 	  // Your code here
+		if(token == ERROR_UNKNOWN){
+			std::cout<<"Error "<<token<<std::endl; //TODO: chnge tokeen to char 
+			exit(0);
+		}
 		if(token == ERROR_UNCLOSED_STRING){
-			
+			std::cout<<"Error unclosed string"<<std::endl; 
+			exit(0);
 		}
 		if(token == ERROR_UNDEFINED_ESCAPE_SEQ){
-
-		}
-		if(token == ERROR_UNKNOWN){
 
 		}
 		if (token == COMMENT) {
