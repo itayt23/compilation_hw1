@@ -10,9 +10,12 @@
 %option noyywrap
 %option yyleng
 %option yytext
-digit   		  ([1-9])
-letter  		  ([a-zA-Z])
-whitespace	      ([\t\r\n ])
+digit   		        ([1-9])
+letter  		        ([a-zA-Z])
+whitespace	            ([\t\r\n ])
+hex1                    ([0-7])
+hex2                    ([0-9A-Fa-f])
+validEscapeSequence     ([0ntr"\\])
 
 %x STRINGS
 
