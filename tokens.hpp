@@ -1,8 +1,8 @@
 #ifndef TOKENS_HPP_
 #define TOKENS_HPP_
-#include <cstdlib>
-  enum tokentype
-  {
+// #include <cstdlib>
+enum tokentype
+{
     VOID = 1,
     INT = 2,
     BYTE = 3,
@@ -35,9 +35,9 @@
     ERROR_UNCLOSED_STRING = 30,
     ERROR_UNDEFINED_ESCAPE_SEQ = 31,
     ERROR_UNKNOWN = 32
-  };
-  extern int yylineno;
-  extern char* yytext;
-  extern int yyleng;
-  extern int yylex();
+};
+extern int yylineno;
+extern char* yytext;
+extern int yyleng;
+extern int yylex();
 #endif /* TOKENS_HPP_ */

@@ -8,8 +8,6 @@
 
 %option yylineno
 %option noyywrap
-%option yyleng
-%option yytext
 digit   		        ([1-9])
 letter  		        ([a-zA-Z])
 whitespace	            ([\t\r\n ])
@@ -21,7 +19,6 @@ valid_escape_sequence     ([0ntr"\\])
 
 
 %%
-/* Rules section */
 
 void                                                                            return VOID;
 int                                                                             return INT;
