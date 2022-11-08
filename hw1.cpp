@@ -54,7 +54,7 @@ char get_escape_sequence(char c){
 			return '\r';
 		case 't':
 			return '\t';
-		case '\\': //TODO: need to check
+		case '\\': 
 			return '\\';
 		case '"':
 			return '"';
@@ -65,11 +65,10 @@ char get_escape_sequence(char c){
 	}
 }
 
-char hex_to_ascii(char c1,char c2){ //TODo: check if its working
+char hex_to_ascii(char c1,char c2){ 
 		std::string hex = std::string(1,c1)+c2; 
  		return (char) (int)strtol(hex.c_str(), nullptr, 16);
 }
-
 
 
 int main()
@@ -79,7 +78,7 @@ int main()
 	while ((token = yylex())){
 	  // Your code here
 		if(token == ERROR_UNKNOWN){
-			std::cout<<"Error "<<token<<std::endl; //TODO: chnge tokeen to char 
+			std::cout<<"Error "<<yytext<<std::endl; 
 			exit(0);
 		}
 		if(token == ERROR_UNCLOSED_STRING){
@@ -87,7 +86,8 @@ int main()
 			exit(0);
 		}
 		if(token == ERROR_UNDEFINED_ESCAPE_SEQ){
-
+			std::cout<<"Error undefined escape sequence"<<std::endl; 
+			exit(0);
 		}
 		if (token == COMMENT) {
 			std::cout << yylineno << " " << token_to_string(token) << " "
