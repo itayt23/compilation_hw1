@@ -1,9 +1,12 @@
 #include <iostream>
 #include <stdio.h>
 #include <string>
+#include <cstring>
 #include "tokens.hpp"
 
 #define INVALID_CHAR -1
+
+using namespace std;
 
 std::string token_to_string(int token){
     switch(token) {
@@ -72,7 +75,8 @@ char hex_to_ascii(char c1,char c2){ //TODo: check if its working
 int main()
 {
 	int token;
-	while ((token = yylex())) {
+	std::string final_string;
+	while ((token = yylex())){
 	  // Your code here
 		if(token == ERROR_UNKNOWN){
 			std::cout<<"Error "<<token<<std::endl; //TODO: chnge tokeen to char 
@@ -86,13 +90,18 @@ int main()
 
 		}
 		if (token == COMMENT) {
-			printf("%d %s %s\n", yylineno, yytext, "//");
+			std::cout << yylineno << " " << token_to_string(token) << " "
+				<< "//" << std::endl;
+			continue;
 		}
 		else if(token == STRING){
-			int string_len = strlen(yytext);
 			std::string final_string;
-			for(int i = 0; i<string_len; i++){
-				if(yytext[i] != '\\'){
+			int string_len = strlen(yytext);
+			for(int i = 0; i <string_len; i++){
+				if((i == 0 && yytext[i] == '\"') || (i==string_len-1 && yytext[i] == '\"')){
+					continue;
+				}
+				else if(yytext[i] != '\\'){
 					final_string.push_back(yytext[i]);
 				}
 				else{
@@ -113,8 +122,13 @@ int main()
 				}
 			}
 			std::cout << yylineno << " " << token_to_string(token) << " "
-             << final_string << std::endl;
+					<< final_string << std::endl;
 		}
+		else{
+			std::cout << yylineno << " " << token_to_string(token) << " "
+				<< yytext << std::endl;
+		}
+	}
 	return 0;
 }
 
