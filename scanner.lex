@@ -51,7 +51,7 @@ continue                                                                        
 {whitespace}				                                                    ;
 \"(\\{valid_escape_sequence}|\\x{first_hex}{second_hex}|[^"\\\n\r])*\"          return STRING;
 \"(\\{valid_escape_sequence}|\\x{first_hex}{second_hex}|[^"\\])*                return ERROR_UNCLOSED_STRING;
-(\\[^n"rt0x\\]|\\x[^0-7].|\\x[0-7][^0-9A-Fa-f]|\\x)                             return ERROR_UNDEFINED_ESCAPE_SEQ;
+\"(\\.|[^"\\\n\r])*\"                                                           return ERROR_UNDEFINED_ESCAPE_SEQ;
 .		                                                                        return ERROR_UNKNOWN;
 
 %%

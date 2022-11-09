@@ -54,7 +54,7 @@ char get_escape_sequence(char c){
 			return '\r';
 		case 't':
 			return '\t';
-		case '\\': 
+		case '\\': //TODO: need to check
 			return '\\';
 		case '"':
 			return '"';
@@ -65,10 +65,11 @@ char get_escape_sequence(char c){
 	}
 }
 
-char hex_to_ascii(char c1,char c2){ 
+char hex_to_ascii(char c1,char c2){ //TODo: check if its working
 		std::string hex = std::string(1,c1)+c2; 
  		return (char) (int)strtol(hex.c_str(), nullptr, 16);
 }
+
 
 
 int main()
@@ -78,15 +79,31 @@ int main()
 	while ((token = yylex())){
 	  // Your code here
 		if(token == ERROR_UNKNOWN){
-			std::cout<<"Error "<<yytext<<std::endl; 
+			std::cout<<"Error "<<yytext<<std::endl; //TODO: chnge tokeen to char 
 			exit(0);
 		}
 		if(token == ERROR_UNCLOSED_STRING){
 			std::cout<<"Error unclosed string"<<std::endl; 
 			exit(0);
 		}
-		if(token == ERROR_UNDEFINED_ESCAPE_SEQ){
-			std::cout<<"Error undefined escape sequence"<<std::endl; 
+		if(token == ERROR_UNDEFINED_ESCAPE_SEQ){//TODO: need to check when it enter here and when enter line 112
+			int string_len = strlen(yytext);
+			std::string escape_seq;
+			for (size_t i = 0; i < string_len; i++){
+				if(yytext[i] == '\\'){
+					if(yytext[i+1] == 'x'){
+						i++;
+						while(yytext[i] != ' ' && yytext[i] != '\"' && i<string_len){
+							escape_seq.push_back(yytext[i]);
+							i++;
+						}
+					}
+					else{
+						escape_seq.push_back(yytext[i+1]);
+					}
+				}
+			}
+			std::cout<<"Error undefined escape sequence "<<escape_seq<<std::endl; 
 			exit(0);
 		}
 		if (token == COMMENT) {
@@ -107,14 +124,18 @@ int main()
 				else{
 					char escape_sequence = get_escape_sequence(yytext[i+1]);
 					if(escape_sequence == INVALID_CHAR){
-						std::cout << "Error undefined escape sequence "<< escape_sequence<< std::endl;
+						std::cout << "Error undefined escape sequence "<< escape_sequence<<std::endl;
 						exit(0);
+					}
+					if(escape_sequence == '\0'){
+						break;
 					}
 					if(escape_sequence != 'x'){
 						final_string.push_back(escape_sequence);
 						i++;
 					}
 					else{
+						if(yytext[i+2] == '0' && yytext[i+3] == '0') break; //TODO: NEED TO CHECK WHAT THEY WANT
 						char ascii_char = hex_to_ascii(yytext[i+2],yytext[i+3]);
 						final_string.push_back(ascii_char);
 						i+=3;
